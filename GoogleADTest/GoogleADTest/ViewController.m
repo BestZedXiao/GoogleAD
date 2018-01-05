@@ -2,7 +2,7 @@
 //  ViewController.m
 //  GoogleADTest
 //
-//  Created by rbt-Macmini on 2018/1/3.
+//  Created by Mr.Xiao on 2018/1/3.
 //  Copyright © 2018年 Mr.Xiao. All rights reserved.
 //
 
@@ -16,14 +16,26 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+   
 }
 
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+
+- (IBAction)click:(UIButton *)sender {
+    [self showInterstitial];
 }
 
+- (IBAction)clickToAppleStore:(UIButton *)sender {
+    [self skipToAppStoreComment];
+}
+
+- (IBAction)detail:(UIButton *)sender {
+    [self skipToAppStoreDetail];
+}
+
+
+-(CGFloat)adjustHeightWithBannerDistanceBoom{
+    return 0;
+}
 
 @end

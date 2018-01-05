@@ -7,4 +7,5 @@ target 'GoogleADTest' do
 
   # Pods for GoogleADTest
 pod 'Firebase/AdMob'
+pod 'Firebase/Core'
 end

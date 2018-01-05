@@ -16,6 +16,11 @@
 		5B6D41101FFCEAAF00973BAD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B6D410F1FFCEAAF00973BAD /* main.m */; };
 		5B6D411A1FFCEB0500973BAD /* MXGoogleADController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B6D41171FFCEB0400973BAD /* MXGoogleADController.m */; };
 		5B6D411B1FFCEB0500973BAD /* MXGoogleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B6D41181FFCEB0500973BAD /* MXGoogleManager.m */; };
+		5B6D411D1FFDBD0A00973BAD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5B6D411C1FFDBD0A00973BAD /* GoogleService-Info.plist */; };
+		5B6D41231FFF23AF00973BAD /* SecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B6D41221FFF23AF00973BAD /* SecondViewController.m */; };
+		5B6D41261FFF23B800973BAD /* ThridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B6D41251FFF23B800973BAD /* ThridViewController.m */; };
+		5B6D41291FFF594200973BAD /* MXCommentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B6D41281FFF594200973BAD /* MXCommentView.m */; };
+		5B6D412B1FFF6A3B00973BAD /* remind.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B6D412A1FFF6A3A00973BAD /* remind.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +40,14 @@
 		5B6D41171FFCEB0400973BAD /* MXGoogleADController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXGoogleADController.m; sourceTree = "<group>"; };
 		5B6D41181FFCEB0500973BAD /* MXGoogleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXGoogleManager.m; sourceTree = "<group>"; };
 		5B6D41191FFCEB0500973BAD /* MXGoogleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXGoogleManager.h; sourceTree = "<group>"; };
+		5B6D411C1FFDBD0A00973BAD /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		5B6D41211FFF23AF00973BAD /* SecondViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SecondViewController.h; sourceTree = "<group>"; };
+		5B6D41221FFF23AF00973BAD /* SecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SecondViewController.m; sourceTree = "<group>"; };
+		5B6D41241FFF23B800973BAD /* ThridViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ThridViewController.h; sourceTree = "<group>"; };
+		5B6D41251FFF23B800973BAD /* ThridViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ThridViewController.m; sourceTree = "<group>"; };
+		5B6D41271FFF594200973BAD /* MXCommentView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MXCommentView.h; sourceTree = "<group>"; };
+		5B6D41281FFF594200973BAD /* MXCommentView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MXCommentView.m; sourceTree = "<group>"; };
+		5B6D412A1FFF6A3A00973BAD /* remind.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = remind.png; sourceTree = "<group>"; };
 		65F3AEB14B759F2554A70160 /* Pods-GoogleADTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GoogleADTest.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GoogleADTest/Pods-GoogleADTest.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -84,14 +97,22 @@
 				5B6D41011FFCEAAF00973BAD /* AppDelegate.m */,
 				5B6D41031FFCEAAF00973BAD /* ViewController.h */,
 				5B6D41041FFCEAAF00973BAD /* ViewController.m */,
+				5B6D41211FFF23AF00973BAD /* SecondViewController.h */,
+				5B6D41221FFF23AF00973BAD /* SecondViewController.m */,
+				5B6D41241FFF23B800973BAD /* ThridViewController.h */,
+				5B6D41251FFF23B800973BAD /* ThridViewController.m */,
 				5B6D41161FFCEB0400973BAD /* MXGoogleADController.h */,
 				5B6D41171FFCEB0400973BAD /* MXGoogleADController.m */,
 				5B6D41191FFCEB0500973BAD /* MXGoogleManager.h */,
 				5B6D41181FFCEB0500973BAD /* MXGoogleManager.m */,
+				5B6D41271FFF594200973BAD /* MXCommentView.h */,
+				5B6D41281FFF594200973BAD /* MXCommentView.m */,
+				5B6D412A1FFF6A3A00973BAD /* remind.png */,
 				5B6D41061FFCEAAF00973BAD /* Main.storyboard */,
 				5B6D41091FFCEAAF00973BAD /* Assets.xcassets */,
 				5B6D410B1FFCEAAF00973BAD /* LaunchScreen.storyboard */,
 				5B6D410E1FFCEAAF00973BAD /* Info.plist */,
+				5B6D411C1FFDBD0A00973BAD /* GoogleService-Info.plist */,
 				5B6D410F1FFCEAAF00973BAD /* main.m */,
 			);
 			path = GoogleADTest;
@@ -166,7 +187,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5B6D412B1FFF6A3B00973BAD /* remind.png in Resources */,
 				5B6D410D1FFCEAAF00973BAD /* LaunchScreen.storyboard in Resources */,
+				5B6D411D1FFDBD0A00973BAD /* GoogleService-Info.plist in Resources */,
 				5B6D410A1FFCEAAF00973BAD /* Assets.xcassets in Resources */,
 				5B6D41081FFCEAAF00973BAD /* Main.storyboard in Resources */,
 			);
@@ -230,9 +253,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5B6D41231FFF23AF00973BAD /* SecondViewController.m in Sources */,
 				5B6D411A1FFCEB0500973BAD /* MXGoogleADController.m in Sources */,
 				5B6D41051FFCEAAF00973BAD /* ViewController.m in Sources */,
 				5B6D41101FFCEAAF00973BAD /* main.m in Sources */,
+				5B6D41261FFF23B800973BAD /* ThridViewController.m in Sources */,
+				5B6D41291FFF594200973BAD /* MXCommentView.m in Sources */,
 				5B6D41021FFCEAAF00973BAD /* AppDelegate.m in Sources */,
 				5B6D411B1FFCEB0500973BAD /* MXGoogleManager.m in Sources */,
 			);
@@ -308,7 +334,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -357,7 +383,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -370,6 +396,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 6WB9J4DVYM;
 				INFOPLIST_FILE = GoogleADTest/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.BestZedXiao.GoogleADTest;
@@ -384,6 +411,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 6WB9J4DVYM;
 				INFOPLIST_FILE = GoogleADTest/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.BestZedXiao.GoogleADTest;

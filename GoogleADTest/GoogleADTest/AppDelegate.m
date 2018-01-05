@@ -2,11 +2,12 @@
 //  AppDelegate.m
 //  GoogleADTest
 //
-//  Created by rbt-Macmini on 2018/1/3.
+//  Created by Mr.Xiao on 2018/1/3.
 //  Copyright © 2018年 Mr.Xiao. All rights reserved.
 //
 
 #import "AppDelegate.h"
+#import "MXGoogleManager.h"
 
 @interface AppDelegate ()
 
@@ -14,6 +15,20 @@
 
 @implementation AppDelegate
 
++ (void)initialize{
+    
+    //banner广告单元
+    [MXGoogleManager shareInstance].adUnitIBanner = @"ca-app-pub-3940256099942544/2934735716";
+    //全屏广告单元
+    [MXGoogleManager shareInstance].adUnitIDInterstitial = @"ca-app-pub-3940256099942544/4411468910";
+    //应用APPID
+    [MXGoogleManager shareInstance].appleID = @"393765873";
+    //界面切换次数 弹出全屏广告(默认8次 重写此方法可修改次数)
+    [MXGoogleManager shareInstance].switchVCShowAD = 5;
+    //界面切换次数 弹出去评论窗口(默认10次 重写此方法可修改次数)
+    [MXGoogleManager shareInstance].switchVCShowComment = 10;
+    
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
