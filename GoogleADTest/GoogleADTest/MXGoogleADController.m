@@ -7,6 +7,8 @@
 //
 
 #define iOS11_0Later ([UIDevice currentDevice].systemVersion.floatValue >= 11.0f)
+#define IPHONEX (CGSizeEqualToSize(CGSizeMake(375.f, 812.f), [UIScreen mainScreen].bounds.size) || CGSizeEqualToSize(CGSizeMake(812.f, 375.f), [UIScreen mainScreen].bounds.size))
+
 
 #define KEY_SWITCH_COUNT_AD @"keyAD"
 #define KEY_SWITCH_COUNT_COMMENT @"keyComment"
@@ -39,34 +41,48 @@
 -(GADBannerView *)bannerView{
     if (_bannerView == nil) {
         if ([self isRootControllerWithTabbarController] == YES) {
-            _bannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeSmartBannerPortrait origin:CGPointMake(0,[UIScreen mainScreen].bounds.size.height- [self getSizeFromBannerGADSize] -[self adjustHeightWithBannerDistanceBoom]- 49)];
+            _bannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeSmartBannerPortrait origin:CGPointMake(0,[UIScreen mainScreen].bounds.size.height- [self getSizeFromBannerGADSize] -[self adjustHeightWithBannerDistanceBoom]- [self getTabbarHeight])];
         }else{
             _bannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeSmartBannerPortrait origin:CGPointMake(0,[UIScreen mainScreen].bounds.size.height- [self getSizeFromBannerGADSize] -[self adjustHeightWithBannerDistanceBoom])];
         }
         _bannerView.adUnitID = [MXGoogleManager shareInstance].adUnitIBanner;
         _bannerView.rootViewController = self;
-        [_bannerView loadRequest:self.requset];
+        [_bannerView loadRequest:[self requset]];
     }
     return _bannerView;
 }
 
+/*当成功调用了一下GADInterstitial的presentFromRootViewController展示插屏广告之后。下次如果这个对象只调用loadRequest来请求新的广告，在下次显示广告时，日志会提示：
+    Request Error: Will not send request because interstitial object has been used.
+ 
+解决方法：重新再实例化一个新的GADInterstital对象，然后发送请求。具体初始化代码可以参考上面
+ 
+ 找了半天问题  解决方法是 重复初始化GADRequest  之前确实是初始化了interstittal 但是发现request没有初始化 所以广告弹出依然有问题
+ */
 - (GADInterstitial *)creatNewInterstitial{
     GADInterstitial *interstitial = [[GADInterstitial alloc] initWithAdUnitID:[MXGoogleManager shareInstance].adUnitIDInterstitial];
     interstitial.delegate = self;
-    [interstitial loadRequest:self.requset];
+    [interstitial loadRequest:[self requset]];
     return interstitial;
 }
 
 -(GADRequest *)requset{
-    if (_requset == nil) {
-        _requset = [GADRequest request];
-        _requset.testDevices = self.testDevices;
+    GADRequest *request = [GADRequest request];
+    request.testDevices = self.testDevices;
+    return request;
+}
+
+//获取tabbar的高度 适配下iPhone X的高度
+- (CGFloat)getTabbarHeight{
+    if (IPHONEX) {
+        return 49.0f+34.0f;
+    }else{
+        return 49.0f;
     }
-    return _requset;
 }
 
 #pragma mark --------->>>>>>>>>> (来这里添加测试设备号，模拟器请无视)
-//测试设备ID号 如广告未展示出来 请在一下数组添加 设备号会在log窗有打印 请找到 粘贴进来
+//测试设备ID号 如广告未展示出来 请在以下数组中添加 设备号会在log窗有打印 请找到 粘贴进来
 //真机需要添加 模拟器请无视
 - (NSArray *)testDevices{
     return @[kGADSimulatorID,@"00922d2eb7811f0b4fbfd06e5788c8a6"];
@@ -81,7 +97,6 @@
     if (_switchCount%[MXGoogleManager shareInstance].switchVCShowAD == 0) {
         [self showInterstitial];
     }
-
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -91,7 +106,7 @@
 }
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
 }
 
 - (void)viewDidLoad {
@@ -104,6 +119,11 @@
     if ([self isShowInsterstitial] == YES) {
         self.interstitial = [self creatNewInterstitial];
     }
+    
+    // app从后台进入前台都会调用这个方法
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationBecomeActive) name:UIApplicationWillEnterForegroundNotification object:nil];
+    // 添加检测app进入后台的观察者
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationEnterBackground) name: UIApplicationDidEnterBackgroundNotification object:nil];
 }
 
 #pragma mark ===================  banner 横幅广告  ===================
@@ -134,8 +154,8 @@
 //展示全屏广告
 - (void)showInterstitial{
     if (self.interstitial.isReady) {
-        AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        [self.interstitial presentFromRootViewController:delegate.window.rootViewController];
+        UIWindow *window = [UIApplication sharedApplication].delegate.window;
+        [self.interstitial presentFromRootViewController:window.rootViewController];
     }
 }
 
@@ -165,6 +185,9 @@
 
 -(void)interstitialWillDismissScreen:(GADInterstitial *)ad{
     NSLog(@"广告将要消失");
+    if (self.interstitial.hasBeenUsed && [self isShowInsterstitial]) {
+        self.interstitial = [self creatNewInterstitial];
+    }
 }
 
 -(void)interstitialDidDismissScreen:(GADInterstitial *)ad{
@@ -178,7 +201,6 @@
 -(void)interstitialWillLeaveApplication:(GADInterstitial *)ad{
     NSLog(@"广告将要离开应用");
 }
-
 
 #pragma mark --------->>>>>>>>>> 评论系统
 //跳到appStore评论页
@@ -202,4 +224,20 @@
     NSString *urlStr = [NSString stringWithFormat:@"itms-apps://itunes.apple.com/app/id%@", [MXGoogleManager shareInstance].appleID];
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlStr]];
 }
+
+#pragma mark --------->>>>>>>>>> 监听系统前后台切换
+//应用进入后台
+- (void)applicationEnterBackground{
+    NSLog(@"应用进入后台");
+}
+
+//应用来到前台
+- (void)applicationBecomeActive{
+    if (self.isShowInsterstitial) {
+        [self showInterstitial];
+    }
+    NSLog(@"应用进入前台，可以展示广告了");
+}
+
+
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import <SafariServices/SafariServices.h>
 
 @interface ViewController ()
 
@@ -26,7 +27,14 @@
 }
 
 - (IBAction)clickToAppleStore:(UIButton *)sender {
-    [self skipToAppStoreComment];
+//    [self skipToAppStoreComment];
+//    NSURL *url = [NSURL URLWithString:@"text123://"];
+//    if ([[UIApplication sharedApplication] canOpenURL:url]) {
+//        [[UIApplication sharedApplication] openURL:url];
+//    };
+    NSURL *url = [NSURL URLWithString:@"https://www.invasivecode.com"];
+    SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL:url];
+    [self showViewController:safariVC sender:nil];
 }
 
 - (IBAction)detail:(UIButton *)sender {

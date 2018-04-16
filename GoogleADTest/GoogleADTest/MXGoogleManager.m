@@ -20,7 +20,7 @@
 }
 
 - (instancetype)init{
-    if ([super init]) {
+    if (self = [super init]) {
         _switchVCShowAD = 8;
         _switchVCShowComment = 20;
     }
