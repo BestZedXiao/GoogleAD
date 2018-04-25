@@ -16,16 +16,19 @@
 #import "MXGoogleADController.h"
 #import "MXGoogleManager.h"
 #import <GoogleMobileAds/GoogleMobileAds.h>
+#import <StoreKit/StoreKit.h>
 #import "AppDelegate.h"
 #import "MXCommentView.h"
 
-@interface MXGoogleADController ()<GADInterstitialDelegate>
+@interface MXGoogleADController ()<GADInterstitialDelegate,SKPaymentTransactionObserver,SKProductsRequestDelegate>
 
 @property (nonatomic, strong) GADBannerView *bannerView;
 @property (nonatomic, strong) GADInterstitial *interstitial;
 @property (nonatomic, strong) GADRequest *requset;
 
 @property (nonatomic, assign) NSInteger switchCount;
+
+@property (nonatomic, copy) NSString *productID;
 
 /**
  测试设备ID号 如广告未展示出来 请在一下数组添加 设备号会在log窗有打印 请找到 粘贴进来
@@ -88,12 +91,18 @@
     return @[kGADSimulatorID,@"00922d2eb7811f0b4fbfd06e5788c8a6"];
 }
 
+#pragma mark -VIEWLOAD
+- (void)dealloc{
+    [[SKPaymentQueue defaultQueue] removeTransactionObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
+}
+
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     _switchCount = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_SWITCH_COUNT_AD];
     _switchCount++;
-//    NSLog(@"%ld",(long)_switchCount);
-
+    //    NSLog(@"%ld",(long)_switchCount);
+    
     if (_switchCount%[MXGoogleManager shareInstance].switchVCShowAD == 0) {
         [self showInterstitial];
     }
@@ -106,7 +115,6 @@
 }
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-//    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
 }
 
 - (void)viewDidLoad {
@@ -124,11 +132,10 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationBecomeActive) name:UIApplicationWillEnterForegroundNotification object:nil];
     // 添加检测app进入后台的观察者
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationEnterBackground) name: UIApplicationDidEnterBackgroundNotification object:nil];
+    
 }
 
 #pragma mark ===================  banner 横幅广告  ===================
-
-
 //重写此方法 自定义是否显示banner广告 (默认显示广告)
 - (BOOL)isShowBanner{
     return YES;
@@ -161,7 +168,6 @@
 
 //判断根视图是否 有tabbar 防止tabbar 遮挡banner广告
 - (BOOL)isRootControllerWithTabbarController{
-    
     return [(UITabBarController *)self.tabBarController isKindOfClass:[UITabBarController class]];
 }
 
@@ -237,6 +243,189 @@
         [self showInterstitial];
     }
     NSLog(@"应用进入前台，可以展示广告了");
+}
+
+#pragma mark ===================  内购去广告  ===================
+
+#pragma mark - 内购
+//内购ID
+- (NSString *)productID{
+    if (_productID == nil) {
+        _productID = [MXGoogleManager shareInstance].productID;
+    }
+    return _productID;
+}
+
+- (void)clickPhures{
+    
+    [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
+    
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"提示" message:@"花费6元购买去广告" preferredStyle:UIAlertControllerStyleActionSheet];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"确定购买" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        if([SKPaymentQueue canMakePayments]){
+            [self requestProductData:self.productID];
+        }else{
+            NSLog(@"不允许程序内付费");
+        }
+    }]];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:@"已购买直接去广告" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
+        [[SKPaymentQueue defaultQueue] restoreCompletedTransactions];
+    }]];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [self presentViewController:alertController animated:YES completion:nil];
+    
+}
+
+//请求商品
+- (void)requestProductData:(NSString *)type{
+    NSLog(@"-------------请求对应的产品信息----------------");
+    NSArray *product = [[NSArray alloc] initWithObjects:type,nil];
+    NSSet *nsset = [NSSet setWithArray:product];
+    SKProductsRequest *request = [[SKProductsRequest alloc] initWithProductIdentifiers:nsset];
+    request.delegate = self;
+    [request start];
+    
+}
+
+//收到产品返回信息
+- (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response{
+    
+    NSLog(@"--------------收到产品反馈消息---------------------");
+    NSArray *product = response.products;
+    if([product count] == 0){
+        NSLog(@"--------------没有商品------------------");
+        return;
+    }
+    
+    NSLog(@"productID:%@", response.invalidProductIdentifiers);
+    NSLog(@"产品付费数量:%lu",(unsigned long)[product count]);
+    
+    SKProduct *p = nil;
+    for (SKProduct *pro in product) {
+        NSLog(@"描述信息：%@", [pro description]);
+        NSLog(@"产品标题：%@", [pro localizedTitle]);
+        NSLog(@"产品描述信息：%@", [pro localizedDescription]);
+        NSLog(@"价格：%@", [pro price]);
+        NSLog(@"内购ID：%@", [pro productIdentifier]);
+        
+        if([pro.productIdentifier isEqualToString:self.productID]){
+            p = pro;
+        }
+    }
+    
+    if (p != nil) {
+        SKPayment *payment = [SKPayment paymentWithProduct:p];
+        
+        NSLog(@"发送购买请求");
+        [[SKPaymentQueue defaultQueue] addPayment:payment];
+    }
+}
+
+//请求失败
+- (void)request:(SKRequest *)request didFailWithError:(NSError *)error{
+    NSLog(@"------------------错误-----------------:%@", error);
+}
+
+- (void)requestDidFinish:(SKRequest *)request{
+    NSLog(@"------------反馈信息结束-----------------");
+}
+//沙盒测试环境验证
+#define SANDBOX @"https://sandbox.itunes.apple.com/verifyReceipt"
+//正式环境验证
+#define AppStore @"https://buy.itunes.apple.com/verifyReceipt"
+/**
+ *  验证购买，避免越狱软件模拟苹果请求达到非法购买问题
+ *
+ */
+-(void)verifyPurchaseWithPaymentTransaction{
+    //从沙盒中获取交易凭证并且拼接成请求体数据
+    NSURL *receiptUrl=[[NSBundle mainBundle] appStoreReceiptURL];
+    NSData *receiptData=[NSData dataWithContentsOfURL:receiptUrl];
+
+    NSString *receiptString=[receiptData base64EncodedStringWithOptions:NSDataBase64EncodingEndLineWithLineFeed];//转化为base64字符串
+
+    NSString *bodyString = [NSString stringWithFormat:@"{\"receipt-data\" : \"%@\"}", receiptString];//拼接请求数据
+    NSData *bodyData = [bodyString dataUsingEncoding:NSUTF8StringEncoding];
+
+
+    //创建请求到苹果官方进行购买验证
+    NSURL *url=[NSURL URLWithString:SANDBOX];
+    NSMutableURLRequest *requestM=[NSMutableURLRequest requestWithURL:url];
+    requestM.HTTPBody = bodyData;
+    requestM.HTTPMethod = @"POST";
+    //创建连接并发送同步请求
+    NSError *error=nil;
+    NSData *responseData = [NSURLConnection sendSynchronousRequest:requestM returningResponse:nil error:&error];
+    if (error) {
+        NSLog(@"验证购买过程中发生错误，错误信息：%@",error.localizedDescription);
+        return;
+    }
+    NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingAllowFragments error:nil];
+    NSLog(@"%@",dic);
+    if([dic[@"status"] intValue]==0){
+        NSLog(@"购买成功！");
+
+        NSDictionary *dicReceipt= dic[@"receipt"];
+        NSDictionary *dicInApp=[dicReceipt[@"in_app"] firstObject];
+        NSString *productIdentifier= dicInApp[@"product_id"];//读取产品标识
+        //如果是消耗品则记录购买数量，非消耗品则记录是否购买过
+        NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
+        if ([productIdentifier isEqualToString:self.productID]) {
+            [defaults setBool:YES forKey:productIdentifier];
+        }else{
+            NSInteger purchasedCount = [defaults integerForKey:productIdentifier];//已购买数量
+            [[NSUserDefaults standardUserDefaults] setInteger:(purchasedCount+1) forKey:productIdentifier];
+        }
+        //在此处对购买记录进行存储，可以存储到开发商的服务器端
+    }else{
+        NSLog(@"购买失败，未通过验证！");
+    }
+}
+//监听购买结果
+- (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transaction{
+    
+    
+    for(SKPaymentTransaction *tran in transaction){
+        NSLog(@"打印购买错误日志---%@",tran.error.description);
+        
+        switch (tran.transactionState) {
+            case SKPaymentTransactionStatePurchased:{
+                NSLog(@"交易完成");
+                [self verifyPurchaseWithPaymentTransaction];
+                [[SKPaymentQueue defaultQueue] finishTransaction:tran];
+                
+            }
+                break;
+            case SKPaymentTransactionStatePurchasing:
+                NSLog(@"商品添加进列表");
+                
+                break;
+            case SKPaymentTransactionStateRestored:{
+                NSLog(@"已经购买过商品");
+                [[SKPaymentQueue defaultQueue] finishTransaction:tran];
+            }
+                break;
+            case SKPaymentTransactionStateFailed:{
+                NSLog(@"交易失败");
+                [[SKPaymentQueue defaultQueue] finishTransaction:tran];
+            }
+            case SKPaymentTransactionStateDeferred:{
+                NSLog(@"交易还在队列里面，但最终状态还没有决定");
+                break;
+            }
+            default:
+                break;
+        }
+    }
+}
+
+//交易结束
+- (void)completeTransaction:(SKPaymentTransaction *)transaction{
+    NSLog(@"交易结束");
+    [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
 }
 
 

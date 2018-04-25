@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="O3t-Nu-M28">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="O3t-Nu-M28">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -107,10 +107,27 @@
                                     <action selector="detail:" destination="BYZ-38-t0r" eventType="touchUpInside" id="cv5-0H-4kf"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Zb-cU-R2o">
+                                <rect key="frame" x="87" y="199" width="200" height="50"/>
+                                <color key="backgroundColor" red="0.3783075446056644" green="0.51544888615746087" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="gXI-cd-27w"/>
+                                    <constraint firstAttribute="width" constant="200" id="mtI-FS-zpv"/>
+                                </constraints>
+                                <state key="normal" title="内购去广告">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="buy:" destination="BYZ-38-t0r" eventType="touchUpInside" id="LrS-gd-RBF"/>
+                                    <action selector="click:" destination="BYZ-38-t0r" eventType="touchUpInside" id="wbA-ab-r7j"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="TMk-Qq-znv" firstAttribute="top" secondItem="IgU-Os-K0p" secondAttribute="bottom" constant="50" id="3c0-fv-Ozj"/>
+                            <constraint firstItem="0Zb-cU-R2o" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="4XP-Sn-P9P"/>
+                            <constraint firstItem="IgU-Os-K0p" firstAttribute="top" secondItem="0Zb-cU-R2o" secondAttribute="bottom" constant="60" id="EhX-jo-n8c"/>
                             <constraint firstItem="IgU-Os-K0p" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="PCp-NX-mbU"/>
                             <constraint firstItem="IgU-Os-K0p" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="U9d-sa-kXL"/>
                             <constraint firstItem="YWo-DM-Flm" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="VlE-y9-se9"/>

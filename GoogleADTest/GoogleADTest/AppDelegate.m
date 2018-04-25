@@ -22,11 +22,13 @@
     //全屏广告单元
     [MXGoogleManager shareInstance].adUnitIDInterstitial = @"ca-app-pub-3940256099942544/4411468910";
     //应用APPID
-    [MXGoogleManager shareInstance].appleID = @"393765873";
+    [MXGoogleManager shareInstance].appleID = @"1337037515";
     //界面切换次数 弹出全屏广告(默认8次 重写此方法可修改次数)
     [MXGoogleManager shareInstance].switchVCShowAD = 5;
     //界面切换次数 弹出去评论窗口(默认10次 重写此方法可修改次数)
     [MXGoogleManager shareInstance].switchVCShowComment = 10;
+    //去广告productIdentifier
+    [MXGoogleManager shareInstance].productID = @"Remove_Ads_for_DigitalVoiceRecorder_Lite";
     
 }
 

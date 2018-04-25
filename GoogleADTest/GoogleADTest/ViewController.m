@@ -41,6 +41,10 @@
     [self skipToAppStoreDetail];
 }
 
+- (IBAction)buy:(UIButton *)sender {
+    [self clickPhures];
+}
+
 
 -(CGFloat)adjustHeightWithBannerDistanceBoom{
     return 0;

@@ -73,4 +73,13 @@
 - (void)skipToAppStoreDetail;
 
 
+/*首先加入相关的框架
+#import <StoreKit/StoreKit.h>
+=================  内购去广告  ==================
+测试内购 先要创建一个内购项目
+https://www.jianshu.com/p/86ac7d3b593a
+ 同时要在Capabilities 里面打开 In-app pruchase开关  开发者配置文件里面可以添加相应的配置
+ */
+- (void)clickPhures;
+
 @end

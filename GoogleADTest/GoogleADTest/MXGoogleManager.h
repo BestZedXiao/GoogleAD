@@ -19,6 +19,9 @@
 @property (nonatomic, assign) NSInteger switchVCShowAD;
 
 @property (nonatomic, assign) NSInteger switchVCShowComment;
+//去广告productIdentifier
+@property (nonatomic, copy) NSString *productID;
+
 
 
 + (instancetype) shareInstance;
